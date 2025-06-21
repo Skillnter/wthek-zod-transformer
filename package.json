@@ -1,6 +1,6 @@
 {
     "name": "@wthek/zod-transformer",
-    "version": "1.0.0-beta.1",
+    "version": "1.0.0",
     "description": "Framework-agnostic utility that transforms Zod validation errors into structured http-error-kit errors. Preserves issue details and integrates cleanly with custom formatters.",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
