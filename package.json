@@ -1,5 +1,5 @@
 {
-    "name": "@wthek/zod-middleware",
+    "name": "@wthek/zod-transformer",
     "version": "1.0.0-beta.1",
     "description": "Framework-agnostic utility that transforms Zod validation errors into structured http-error-kit errors. Preserves issue details and integrates cleanly with custom formatters.",
     "main": "dist/index.js",
@@ -11,7 +11,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Skillnter/wthek-zod-middleware.git"
+        "url": "git+https://github.com/Skillnter/wthek-zod-transformer.git"
     },
     "keywords": [
         "zod",
@@ -30,9 +30,9 @@
     "author": "Himanshu Bansal <skillhimanshubansal@gmail.com>",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/Skillnter/wthek-zod-middleware/issues"
+        "url": "https://github.com/Skillnter/wthek-zod-transformer/issues"
     },
-    "homepage": "https://github.com/Skillnter/wthek-zod-middleware#readme",
+    "homepage": "https://github.com/Skillnter/wthek-zod-transformer#readme",
     "dependencies": {
         "http-error-kit": "^1.1.0",
         "http-response-status-code": "^1.7.5",
