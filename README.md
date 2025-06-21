@@ -10,7 +10,8 @@ _Built for projects using [`http-error-kit`][http-error-kit], this utility trans
 [![npm version](https://img.shields.io/npm/v/%40wthek%2Fzod-transformer?color=brightgreen)](https://www.npmjs.com/package/@wthek/zod-transformer)
 [![GitHub license](https://img.shields.io/github/license/skillnter/wthek-zod-transformer?color=brightgreen)](LICENSE)
 [![GitHub Issues](https://img.shields.io/github/issues/Skillnter/wthek-zod-transformer)](https://github.com/Skillnter/wthek-zod-transformer/issues)
-
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/96c169bcb80541b08b3667a5449833be)](https://app.codacy.com/gh/Skillnter/wthek-zod-transformer/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/96c169bcb80541b08b3667a5449833be)](https://app.codacy.com/gh/Skillnter/wthek-zod-transformer/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 ![npms.io (final)](https://img.shields.io/npms-io/maintenance-score/%40wthek%2Fzod-transformer?color=brightgreen)
 ![npm](https://img.shields.io/npm/dy/%40wthek%2Fzod-transformer)
 [![Socket Badge](https://socket.dev/api/badge/npm/package/@wthek/zod-transformer/1.0.0)](https://socket.dev/npm/package/@wthek/zod-transformer/overview/1.0.0)
