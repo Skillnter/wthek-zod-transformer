@@ -42,7 +42,7 @@ export interface IKitZodTransformerOptions {
 export function fromZodError(
     error: unknown,
     options?: IKitZodTransformerOptions
-): KitHttpError | null {
+) {
     if (error instanceof ZodError) {
         const { message = "Zod Validation Failed", statusCode = BAD_REQUEST } =
             options ?? {};
