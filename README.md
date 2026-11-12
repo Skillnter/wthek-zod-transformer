@@ -14,9 +14,9 @@ _Built for projects using [`http-error-kit`][http-error-kit], this utility trans
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/96c169bcb80541b08b3667a5449833be)](https://app.codacy.com/gh/Skillnter/wthek-zod-transformer/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 ![npms.io (final)](https://img.shields.io/npms-io/maintenance-score/%40wthek/zod-transformer?color=brightgreen)
 ![npm](https://img.shields.io/npm/dy/%40wthek%2Fzod-transformer)
-![npm bundle size (version)](https://img.shields.io/bundlephobia/minzip/%40wthek%2Fzod-transformer/1.0.0)
+![npm bundle size (version)](https://img.shields.io/bundlephobia/minzip/%40wthek%2Fzod-transformer/1.1.0)
 ![NPM Type Definitions](https://img.shields.io/npm/types/%40wthek%2Fzod-transformer)
-[![Socket Badge](https://socket.dev/api/badge/npm/package/@wthek/zod-transformer/1.0.0)](https://socket.dev/npm/package/@wthek/zod-transformer/overview/1.0.0)
+[![Socket Badge](https://socket.dev/api/badge/npm/package/@wthek/zod-transformer/1.1.0)](https://socket.dev/npm/package/@wthek/zod-transformer/overview/1.1.0)
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-121013?logo=github&logoColor=white)](https://skillnter.github.io/wthek-zod-transformer/)
 [![Github Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-30363D?&logo=GitHub-Sponsors&logoColor=EA4AAA)](https://github.com/sponsors/Skillnter)
 [![Open Collective](https://img.shields.io/badge/Open%20Collective-3385FF?logo=open-collective&logoColor=white)](https://opencollective.com/skillnter)
@@ -26,17 +26,18 @@ _Built for projects using [`http-error-kit`][http-error-kit], this utility trans
 
 ## Features
 
--   **Framework-Agnostic** – Works with any HTTP server: Express, Fastify, Hapi, Koa, NestJS, etc
--   **Preserves Zod Issues** – Keeps all raw `ZodIssue[]` data for later formatting
--   **Handles ZodError gracefully** – Converts it to `HttpError.BadRequest`
--   **Formatter-Friendly** – Customize your output using `KitHttpErrorConfig.configureFormatter`
--   **Plug-and-play logic** – One function to drop in wherever you handle errors
--   **Composable** – Can be used alongside `@wthek/*-middleware` extension
+-   **Framework-Agnostic** – Works with any HTTP server: Express, Fastify, Hapi, Koa, NestJS, etc.
+-   **Dual Conversion APIs** – Use `KitZodTransformer` (throwing) or `fromZodError` (non-throwing).
+-   **Preserves Zod Issues** – Keeps raw `ZodIssue[]` details attached to the error.
+-   **Configurable Options** – Customize the error message and HTTP status code (e.g. 422 Unprocessable Entity).
+-   **Formatter-Friendly** – Customize output using `KitHttpErrorConfig.configureFormatter`.
+-   **Composable** – Pairs seamlessly with `@wthek/*-middleware` extensions.
 
 ## Table of Content
 
 -   [Installation](#installation)
 -   [Usage](#usage)
+-   [Options](#options)
 -   [Explore More WTHek Extensions](#explore-more-wthek-extensions)
 -   [People](#people)
 -   [Donations](#donations)
@@ -50,45 +51,77 @@ npm install @wthek/zod-transformer
 
 ## Usage
 
-**Add Middleware Just Before Starting the Server**
+### 1. `KitZodTransformer` (Throws)
 
-Use `KitZodTransformer` in your error pipeline **before** global error-handling middleware like [`@wthek/express-middleware`][@wthek/express-middleware] or [`@wthek/fastify-middleware`][@wthek/fastify-middleware].
+Transforms any `ZodError` into a `KitHttpError` and throws it. If the error is not a `ZodError`, it is thrown unchanged.
 
-This ensures Zod validation errors are transformed into `http-error-kit` errors early, allowing WTHek or any other middlewares to handle them cleanly.
-
-```Typescript
+```typescript
 import { KitZodTransformer } from "@wthek/zod-transformer";
 import { z } from "zod";
 
-try {
-    const schema = z.object({
-        name: z.string(),
-        age: z.number().min(18),
-    });
+const schema = z.object({
+    name: z.string(),
+    age: z.number().min(18),
+});
 
-    schema.parse({ name: "Hek", age: 14 }); // Will fail
+try {
+    schema.parse({ name: "Hek", age: 14 }); // Fails validation
 } catch (err) {
-    throw KitZodTransformer(err); // Converts to HttpError.BadRequest(...)
+    KitZodTransformer(err); // Throws KitHttpError with status 400 and issues
 }
 ```
 
-### With Express/Fastify/NestJS
+### 2. `fromZodError` (Non-throwing)
 
-Use the transformer early in your error handling pipeline — before applying framework-specific middleware like:
+Converts a `ZodError` into a `KitHttpError` instance or returns `null` if the error is not a `ZodError`.
+
+```typescript
+import { fromZodError } from "@wthek/zod-transformer";
+
+const kitError = fromZodError(err);
+if (kitError) {
+    // Handle or pass to response
+    reply.status(kitError.statusCode ?? 400).send(kitError);
+}
+```
+
+### With Options
+
+```typescript
+import { KitZodTransformer } from "@wthek/zod-transformer";
+
+try {
+    schema.parse(data);
+} catch (err) {
+    KitZodTransformer(err, {
+        message: "Invalid payload provided",
+        statusCode: 422, // Unprocessable Entity
+    });
+}
+```
+
+## Options
+
+| Option       | Type     | Default                  | Description                                                |
+| ------------ | -------- | ------------------------ | ---------------------------------------------------------- |
+| `message`    | `string` | `"Zod Validation Failed"`| Custom error message for the transformed error.            |
+| `statusCode` | `number` | `400`                    | Custom HTTP status code to assign to the validation error. |
+
+### With Express / Fastify / NestJS
+
+Use the transformer early in your error-handling pipeline — before applying framework-specific middleware like:
 
 -   [@wthek/express-middleware][@wthek/express-middleware]
-
 -   [@wthek/fastify-middleware][@wthek/fastify-middleware]
-
 -   [@wthek/nestjs-middleware][@wthek/nestjs-middleware]
 
-This ensures Zod validation errors are transformed into `http-error-kit` errors early, allowing WTHek or any other middlewares to handle them cleanly.
+This ensures Zod validation errors are transformed into `http-error-kit` errors early, allowing WTHek or any other middleware to handle them cleanly.
 
 ### Optional: Custom Formatting with `KitHttpErrorConfig`
 
 To define how your error responses look in production:
 
-```Typescript
+```typescript
 import { KitHttpErrorConfig } from "http-error-kit";
 
 KitHttpErrorConfig.configureFormatter(
@@ -99,28 +132,6 @@ KitHttpErrorConfig.configureFormatter(
         traceId: args[0] || "0fcb44cb-4f09-4900-8c4f-73ddd37ffe0a",
     })
 );
-
-
-// Response
-{
-    "code": 400,
-    "msg": "Zod validation failed",
-    "extra": {
-        "issues": [
-            {
-                "code": "too_small",
-                "minimum": 18,
-                "type": "number",
-                "inclusive": true,
-                "exact": false,
-                "message": "Number must be greater than or equal to 18",
-                "path": ["age"]
-            }
-        ]
-    },
-    "traceId": "0fcb44cb-4f09-4900-8c4f-73ddd37ffe0a"
-}
-
 ```
 
 ## Explore More WTHek Extensions

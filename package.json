@@ -1,13 +1,25 @@
 {
     "name": "@wthek/zod-transformer",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Framework-agnostic utility that transforms Zod validation errors into structured http-error-kit errors. Preserves issue details and integrates cleanly with custom formatters.",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        },
+        "./package.json": "./package.json"
+    },
+    "sideEffects": false,
+    "engines": {
+        "node": ">=18"
+    },
     "scripts": {
         "test": "jest --config jest.config.ts",
         "build": "tsc --build",
-        "coverage": "jest --coverage --config jest.config.ts"
+        "coverage": "jest --coverage --config jest.config.ts",
+        "prepublishOnly": "npm run test && npm run build"
     },
     "repository": {
         "type": "git",
@@ -20,11 +32,16 @@
         "error-handling",
         "error-transformer",
         "zod-errors",
+        "zod-validation",
+        "validation-error",
+        "api-error",
         "custom-errors",
+        "rest-api",
         "http",
         "error",
         "kit",
         "http-errors",
+        "wthek",
         "skillnter"
     ],
     "author": "Himanshu Bansal <skillhimanshubansal@gmail.com>",
@@ -34,9 +51,11 @@
     },
     "homepage": "https://github.com/Skillnter/wthek-zod-transformer#readme",
     "dependencies": {
-        "http-error-kit": "^1.1.0",
-        "http-response-status-code": "^1.7.5",
-        "zod": "^3.22.2"
+        "http-error-kit": "^1.2.0",
+        "http-response-status-code": "^1.8.0"
+    },
+    "peerDependencies": {
+        "zod": "^3.22.2 || ^4.0.0"
     },
     "devDependencies": {
         "@types/jest": "^29.5.14",
@@ -47,7 +66,8 @@
         "ts-jest": "^29.2.5",
         "ts-node": "^10.9.2",
         "tslib": "^2.8.1",
-        "typescript": "^5.7.3"
+        "typescript": "^5.7.3",
+        "zod": "^3.22.2 || ^4.0.0"
     },
     "publishConfig": {
         "@skillnter:registry": "https://npm.pkg.github.com/"
