@@ -4,6 +4,14 @@ import { BAD_REQUEST } from "http-response-status-code";
 
 /**
  * Configuration options for KitZodTransformer and fromZodError.
+ *
+ * @example
+ * ```typescript
+ * const options: IKitZodTransformerOptions = {
+ *     message: "Invalid input provided",
+ *     statusCode: 422,
+ * };
+ * ```
  */
 export interface IKitZodTransformerOptions {
     /**

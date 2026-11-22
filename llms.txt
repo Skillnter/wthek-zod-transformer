@@ -1,0 +1,63 @@
+# @wthek/zod-transformer
+
+> Framework-agnostic Zod error transformer for `http-error-kit`.
+
+## Overview
+`@wthek/zod-transformer` transforms `ZodError` instances into structured `KitHttpError` objects (defaults to 400 Bad Request) with complete issue details preserved under the `issues` property. Works seamlessly across Express, Fastify, Hono, Koa, NestJS, and Next.js applications.
+
+## Installation
+```bash
+npm install @wthek/zod-transformer zod http-error-kit http-response-status-code
+```
+
+## Quick Start
+
+### Throwing Transformed Errors (`KitZodTransformer`)
+```typescript
+import { z } from "zod";
+import { KitZodTransformer } from "@wthek/zod-transformer";
+
+const UserSchema = z.object({
+  email: z.string().email(),
+  age: z.number().min(18),
+});
+
+try {
+  UserSchema.parse({ email: "invalid-email", age: 16 });
+} catch (error) {
+  // Throws KitHttpError with status 400 and validation issues attached
+  KitZodTransformer(error);
+}
+```
+
+### Safe Conversion Without Throwing (`fromZodError`)
+```typescript
+import { fromZodError } from "@wthek/zod-transformer";
+
+const result = UserSchema.safeParse(data);
+if (!result.success) {
+  const kitError = fromZodError(result.error, {
+    message: "Validation Failed",
+    statusCode: 422,
+  });
+  // kitError is a KitHttpError instance containing { issues: result.error.issues }
+}
+```
+
+## API Reference
+
+### `fromZodError(error: unknown, options?: IKitZodTransformerOptions): KitHttpError | null`
+Converts `ZodError` into `KitHttpError` without throwing. Returns `null` if the provided value is not a `ZodError`.
+
+### `KitZodTransformer(error: unknown, options?: IKitZodTransformerOptions): never`
+Transforms `ZodError` into `KitHttpError` and throws it. If the value is not a `ZodError`, throws it unchanged.
+
+#### Options (`IKitZodTransformerOptions`)
+- `message` (`string`, default: `"Zod Validation Failed"`): Custom error message.
+- `statusCode` (`number`, default: `400`): Custom HTTP status code.
+
+## Safety Rules for AI Agents
+1. Wrap schema validation in `try ... catch` and pass caught errors to `KitZodTransformer(err)`.
+2. When using `safeParse()`, check `!result.success` and convert with `fromZodError(result.error)`.
+3. Non-Zod errors passed to `KitZodTransformer(err)` are rethrown unchanged, preventing swallowed unexpected runtime exceptions.
+
