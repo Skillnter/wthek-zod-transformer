@@ -16,7 +16,7 @@ _Built for projects using [`http-error-kit`][http-error-kit], this utility trans
 ![npm](https://img.shields.io/npm/dy/%40wthek%2Fzod-transformer)
 ![npm bundle size (version)](https://img.shields.io/bundlephobia/minzip/%40wthek%2Fzod-transformer/1.2.0)
 ![NPM Type Definitions](https://img.shields.io/npm/types/%40wthek%2Fzod-transformer)
-[![Socket Badge](https://socket.dev/api/badge/npm/package/@wthek/zod-transformer/1.2.0)](https://socket.dev/npm/package/@wthek/zod-transformer/overview/1.2.0)
+[![Socket Badge](https://socket.dev/api/badge/npm/package/@wthek/zod-transformer/)](https://socket.dev/npm/package/@wthek/zod-transformer/overview/)
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-121013?logo=github&logoColor=white)](https://skillnter.github.io/wthek-zod-transformer/)
 [![Github Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-30363D?&logo=GitHub-Sponsors&logoColor=EA4AAA)](https://github.com/sponsors/Skillnter)
 [![Open Collective](https://img.shields.io/badge/Open%20Collective-3385FF?logo=open-collective&logoColor=white)](https://opencollective.com/skillnter)
